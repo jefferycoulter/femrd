@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # get current direcetory
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 
