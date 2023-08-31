@@ -17,9 +17,6 @@ LinTet::LinTet()
     wip[0] = 1.0 / 6.0;
     wip[1] = 1.0 / 6.0;
     wip[2] = 1.0 / 6.0;
-
-    BuildElemK();
-    BuildElemM();
 }
 
 void LinTet::BuildElemK()
@@ -80,28 +77,43 @@ void LinTet::ComputeShapeFunction(const int &ip)
     Nvec(0) = 1 - xi_ip[ip] - eta_ip[ip] - zeta_ip[ip];
     Nvec(1) = xi_ip[ip];
     Nvec(2) = eta_ip[ip];
-    Nvec(3) =  zeta_ip[ip];
+    Nvec(3) = zeta_ip[ip];
 }
 
 void LinTet::ComputeShapeGradient(const int &ip)
 {
-    GradNvec(0,0) = -1.0; GradNvec(0,1) = 1.0; GradNvec(0,2) = 0.0; GradNvec(0,3) = 0.0; // dNdxi
-    GradNvec(1,0) = -1.0; GradNvec(1,1) = 0.0; GradNvec(1,2) = 1.0; GradNvec(0,3) = 0.0; // dNdeta
-    GradNvec(2,0) = -1.0; GradNvec(2,1) = 0.0; GradNvec(2,2) = 0.0; GradNvec(2,3) = 1.0; // dNdzeta
+    // components M_{ij} = m_{i,j} where ,j is denotes partial derivative wrt to j
+    // i ranges over vector of shape functions, j ranges over parent coordinates
+        // dNdxi                // dNdeta               // dNdzeta
+    GradNvec(0,0) = -1.0;   GradNvec(0,1) = -1.0;   GradNvec(0,2) = -1.0;
+    GradNvec(1,0) =  1.0;   GradNvec(1,1) =  0.0;   GradNvec(1,2) =  0.0;
+    GradNvec(2,0) =  0.0;   GradNvec(2,1) =  1.0;   GradNvec(2,2) =  0.0;
+    GradNvec(3,0) =  0.0;   GradNvec(3,1) =  0.0;   GradNvec(3,2) =  1.0;
 }
 
 void LinTet::ComputeJ(const int &ip)
 {
     ComputeShapeGradient(ip);
-    // J = sum_{i} x_{i}.outer(GradN_{i})
-    double j00 = GradNvec(0,0)*nodes[0].coords[0] + GradNvec(0,1)*nodes[1].coords[0] + GradNvec(0,2)*nodes[2].coords[0];
-    double j01 = GradNvec(1,0)*nodes[0].coords[0] + GradNvec(1,1)*nodes[1].coords[0] + GradNvec(1,2)*nodes[2].coords[0];
-    double j10 = GradNvec(0,0)*nodes[0].coords[1] + GradNvec(0,1)*nodes[1].coords[1] + GradNvec(0,2)*nodes[2].coords[1];
-    double j11 = GradNvec(1,0)*nodes[0].coords[1] + GradNvec(1,1)*nodes[1].coords[1] + GradNvec(1,2)*nodes[2].coords[1];
-    Eigen::Matrix<double, 4, 4> J;
-    J <<    j00, j01,
-            j10, j11;
-    _j = J.determinant();
+    // J = sum_{i} x_{i}.outer(GradN_{i}) for i over nodes
+    // first row
+    double j00 = GradNvec(0,0)*nodes[0].Coords(0) + GradNvec(1,0)*nodes[1].Coords(0) + GradNvec(2,0)*nodes[2].Coords(0) + GradNvec(3,0)*nodes[3].Coords(0);
+    double j01 = GradNvec(0,1)*nodes[0].Coords(0) + GradNvec(1,1)*nodes[1].Coords(0) + GradNvec(2,1)*nodes[2].Coords(0) + GradNvec(3,1)*nodes[3].Coords(0);
+    double j02 = GradNvec(0,2)*nodes[0].Coords(0) + GradNvec(1,2)*nodes[1].Coords(0) + GradNvec(2,2)*nodes[2].Coords(0) + GradNvec(3,2)*nodes[3].Coords(0);
+    // second row
+    double j10 = GradNvec(0,0)*nodes[0].Coords(1) + GradNvec(1,0)*nodes[1].Coords(1) + GradNvec(2,0)*nodes[2].Coords(1) + GradNvec(3,0)*nodes[3].Coords(1);
+    double j11 = GradNvec(0,1)*nodes[0].Coords(1) + GradNvec(1,1)*nodes[1].Coords(1) + GradNvec(2,1)*nodes[2].Coords(1) + GradNvec(3,1)*nodes[3].Coords(1);
+    double j12 = GradNvec(0,2)*nodes[0].Coords(1) + GradNvec(1,2)*nodes[1].Coords(1) + GradNvec(2,2)*nodes[2].Coords(1) + GradNvec(3,2)*nodes[3].Coords(1);
+    // third row
+    double j20 = GradNvec(0,0)*nodes[0].Coords(2) + GradNvec(1,0)*nodes[1].Coords(2) + GradNvec(2,0)*nodes[2].Coords(2) + GradNvec(3,0)*nodes[3].Coords(2);
+    double j21 = GradNvec(0,1)*nodes[0].Coords(2) + GradNvec(1,1)*nodes[1].Coords(2) + GradNvec(2,1)*nodes[2].Coords(2) + GradNvec(3,1)*nodes[3].Coords(2);
+    double j22 = GradNvec(0,2)*nodes[0].Coords(2) + GradNvec(1,2)*nodes[1].Coords(2) + GradNvec(2,2)*nodes[2].Coords(2) + GradNvec(3,2)*nodes[3].Coords(2);
+
+    Eigen::Matrix3d J;
+    // fill them in as transpose to avoid computation and since we want J^{-T}
+    J <<    j00, j10, j20,
+            j01, j11, j21,
+            j02, j12, j22;
+    _j = J.inverse().determinant();   
 }
 
 double& LinTet::j()

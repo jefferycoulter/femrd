@@ -34,7 +34,7 @@ void LinTri::BuildElemK()
         {
             for (int j = 0; j < n_nodes; j++)
             {
-                _k(i,j) += GradNvec(all, i).dot(GradNvec(all, j))*_j*wip[ip];
+                _k(i,j) += GradNvec(i, all).dot(GradNvec(j, all))*_j*wip[ip];
             }
         }
     }
@@ -79,23 +79,35 @@ void LinTri::ComputeShapeFunction(const int &ip)
 
 void LinTri::ComputeShapeGradient(const int &ip)
 {
-    GradNvec(0,0) = -1.0; GradNvec(0,1) = 1.0; GradNvec(0,2) = 0.0;
-    GradNvec(1,0) = -1.0; GradNvec(1,1) = 0.0; GradNvec(1,2) = 1.0;
+    // components M_{ij} = m_{i,j} where ,j is denotes partial derivative wrt to j
+    // i ranges over vector of shape functions, j ranges over parent coordinates
+
+        // dNdxi                // dNdeta
+    GradNvec(0,0) = -1.0;   GradNvec(0,1) = -1.0;
+    GradNvec(1,0) =  1.0;   GradNvec(1,1) =  0.0;
+    GradNvec(2,0) =  0.0;   GradNvec(2,1) =  1.0;
 }
 
 void LinTri::ComputeJ(const int &ip)
 {
+    // TODO: this is not the correct computation
     ComputeShapeGradient(ip);
     // J = sum_{i} x_{i}.outer(GradN_{i})
-    double j00 = GradNvec(0,0)*nodes[0].Coords(0) + GradNvec(0,1)*nodes[1].Coords(0) + GradNvec(0,2)*nodes[2].Coords(0);
-    double j01 = GradNvec(1,0)*nodes[0].Coords(0) + GradNvec(1,1)*nodes[1].Coords(0) + GradNvec(1,2)*nodes[2].Coords(0);
-    double j10 = GradNvec(0,0)*nodes[0].Coords(1) + GradNvec(0,1)*nodes[1].Coords(1) + GradNvec(0,2)*nodes[2].Coords(1);
-    double j11 = GradNvec(1,0)*nodes[0].Coords(1) + GradNvec(1,1)*nodes[1].Coords(1) + GradNvec(1,2)*nodes[2].Coords(1);
+    // first row
+    double j00 = GradNvec(0,0)*nodes[0].coords(0) + GradNvec(1,0)*nodes[1].coords(0) + GradNvec(2,0)*nodes[2].coords(0);
+    double j01 = GradNvec(0,1)*nodes[0].coords(0) + GradNvec(1,1)*nodes[1].coords(0) + GradNvec(2,1)*nodes[2].coords(0);
+    // second row
+    double j10 = GradNvec(0,0)*nodes[0].coords(1) + GradNvec(1,0)*nodes[1].coords(1) + GradNvec(2,0)*nodes[2].coords(1);
+    double j11 = GradNvec(0,1)*nodes[0].coords(1) + GradNvec(1,1)*nodes[1].coords(1) + GradNvec(2,1)*nodes[2].coords(1);
 
     Eigen::Matrix2d J;
-    J <<    j00, j01,
-            j10, j11;
-    _j = J.determinant();
+    // fill them in as transpose to avoid computation and since we want J^{-T}
+    J <<    j00, j10,
+            j01, j11;
+
+    std::cout << j00 << " " << j10 << "\n";
+    std::cout << j01 << " " << j11 << "\n\n";
+    _j = J.inverse().determinant();
 }
 
 double& LinTri::j()

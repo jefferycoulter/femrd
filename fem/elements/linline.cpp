@@ -11,9 +11,6 @@ LinLine::LinLine()
     xi_ip[1] = 1.0 / 3.0;
     wip[0]   = 1.0;
     wip[1]   = 1.0;
-
-    BuildElemK();
-    BuildElemM();
 }
 
 void LinLine::BuildElemK()

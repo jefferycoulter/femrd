@@ -53,7 +53,7 @@ class LinTri : public Element
         float eta_ip[3];
         float wip[3];
         Eigen::Vector3d Nvec;
-        Eigen::Matrix<double, 2, 3> GradNvec;
+        Eigen::Matrix<double, 3, 2> GradNvec;
         Eigen::Matrix3d _k;
         Eigen::Matrix3d _m;
         double _j;      

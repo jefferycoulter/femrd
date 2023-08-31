@@ -53,7 +53,7 @@ class LinLine : public Element
         float wip[2];
         Eigen::Vector2d Nvec;
         Eigen::Vector2d GradNvec;
-        double _j;      // jacobian is just a number in 1D
+        double _j;          // jacobian is just a number in 1D
 
         Eigen::Vector2d _u;
         Eigen::Matrix2d _k;

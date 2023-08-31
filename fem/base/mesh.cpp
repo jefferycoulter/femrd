@@ -127,8 +127,8 @@ void Mesh::GetMesh()
 {
     for (int e = 0; e < n_elems; e++)
     {
-        std::cout << "element " << elems[e]->elem_id << "\n";
-        std::cout << "nodes" << "\n";
+        std::cout << "element: " << elems[e]->elem_id << "\n";
+        std::cout << "nodes:" << "\n";
         for (int n = 0; n < npe; n++)
         {
             std::cout << elems[e]->Nodes(n).node_id << " ";
@@ -136,10 +136,10 @@ void Mesh::GetMesh()
         std::cout << "\n";
         for (int n = 0; n < npe; n++)
         {
-            std::cout << "node " << elems[e]->Nodes(n).node_id << " coords " << "\n";
+            std::cout << "node: " << elems[e]->Nodes(n).node_id << ", coords:";
             for (int i = 0; i < n_dims; i++)
             {
-                std::cout << elems[e]->Nodes(n).Coords(i) << " ";
+                std::cout << " " << elems[e]->Nodes(n).Coords(i);
             }
             std::cout << "\n";
         }
@@ -225,4 +225,12 @@ Node* Mesh::CreateNode()
     default:
         break;
     }
+}
+
+Mesh::~Mesh()
+{
+    for (Node* n : nodes) { delete n; }
+    nodes.clear();
+    for (Element* e : elems) { delete e; }
+    elems.clear();
 }

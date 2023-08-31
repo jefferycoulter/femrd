@@ -54,7 +54,7 @@ class LinTet : public Element
         float zeta_ip[4]; // integration points
         float wip[4];
         Eigen::Vector4d Nvec;
-        Eigen::Matrix<double, 3, 4> GradNvec;
+        Eigen::Matrix<double, 4, 3> GradNvec;
         Eigen::Matrix<double, 4, 4> _k;
         Eigen::Matrix<double, 4, 4> _m;
         double _j; // determinant of the jacobian

@@ -11,6 +11,7 @@ class Mesh
     public:
         /** @brief default constructor */
         Mesh() = default;
+        ~Mesh();
 
         /**
          * @brief initializes mesh element type and number of nodes per element based on

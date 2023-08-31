@@ -4,7 +4,15 @@
 
 int main()
 {
+
     LinLine ll;
+    //
+    // 0_________1
+    //
+    ll.Nodes(0).Coords(0) = 0.0;
+    ll.Nodes(1).Coords(0) = 1.0;
+    ll.BuildElemK();
+    ll.BuildElemM();
 
     std::cout << "Linear Line element" << "\n";
     for (int i = 0; i < 2; i++)
@@ -26,6 +34,20 @@ int main()
     }
 
     LinTri lt;
+    //     (0,1)
+    //      |  \
+    //      |   \
+    //      |    \
+    //      |     \
+    //      | _____\
+    //  (0,0)      (1,0)
+    lt.Nodes(0).Coords(0) = 0.0;
+    lt.Nodes(0).Coords(1) = 0.0;
+    lt.Nodes(1).Coords(0) = 0.0;
+    lt.Nodes(1).Coords(1) = 1.0;
+    lt.Nodes(2).Coords(0) = 1.0;
+    lt.Nodes(2).Coords(1) = 0.0;
+
     lt.BuildElemK();
     lt.BuildElemM();
 

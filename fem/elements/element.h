@@ -40,6 +40,8 @@ class Element
         int elem_id;
         std::string type_str;
     public:
+        virtual ~Element() = default;
+    public:
         /** @brief construct the element stiffness/tangent matrix */
         virtual void BuildElemK() = 0;
 
@@ -85,7 +87,6 @@ class Element
 class Node
 {   
     public:
-        double coords[3];
         int node_id;        /** @brief corresponds to the line the node is read in from the mesh file */
         bool ebc_flag;      /** @brief does the node correspond to an essential boundary? */
 
@@ -95,6 +96,7 @@ class Node
         {}
     public:
         virtual void NodeType() = 0;
+        virtual ~Node() = default;
     public: // operator overloads
         virtual inline double& Coords(const int &i)  = 0;
 
@@ -130,7 +132,9 @@ class Node2D : public Node
     public:
         Node2D()
         : Node()
-        {}
+        {
+            coords = Eigen::Vector2d::Ones();
+        }
     public:
         void NodeType() override { std::cout << "Node2D\n"; }
     public:
