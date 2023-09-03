@@ -3,6 +3,18 @@
 
 #include "element.h"
 
+class NullNode : public Node
+{
+    public:
+        void NodeType() override { std::cout << "NullNode\n"; }
+        
+        inline double& Coords(const int &i) override
+        {
+            double coord = -1.0;
+            return coord;
+        }
+};
+
 class NullElem : public Element
 {
     public:
@@ -40,10 +52,11 @@ class NullElem : public Element
          * @param idx index of the node to access
          * @return Node& 
          */
-        Node& Nodes(const int &idx) override {};
+        Node& Nodes(const int &idx) override { return node; };
 
     public:
         std::string type_str = "NullType";
+        NullNode node;
 };
 
 #endif // NULL_ELEM_INCL

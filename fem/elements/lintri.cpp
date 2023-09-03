@@ -1,6 +1,6 @@
 #include "lintri.h"
 
-#include "iostream"
+#include <iostream>
 
 LinTri::LinTri()
 {

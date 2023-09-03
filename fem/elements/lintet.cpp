@@ -1,22 +1,36 @@
 #include "lintet.h"
 
-#include "iostream"
+#include <iostream>
 
 LinTet::LinTet()
 {
     n_nodes = 4;
     n_ip = 4;
 
-    xi_ip[0]  = 1.0 / 2.0;
-    eta_ip[0] = 1.0 / 2.0;
-    xi_ip[1]  = 1.0 / 2.0;
-    eta_ip[1] = 0.0;
-    xi_ip[2]  = 0.0;
-    eta_ip[2] = 1.0 / 2.0;
-
-    wip[0] = 1.0 / 6.0;
-    wip[1] = 1.0 / 6.0;
-    wip[2] = 1.0 / 6.0;
+    // permute for each integration point
+    double ip[2] =  {   
+                        (5.0 - sqrt(5.0)) / 20.0, 
+                        (5.0 - 3.0*sqrt(5.0)) / 20.0
+                    };
+    // first point
+    xi_ip[0]    = ip[0];
+    eta_ip[0]   = ip[0];
+    zeta_ip[0]  = ip[0];
+    // second point
+    xi_ip[1]    = ip[0];
+    eta_ip[1]   = ip[0];
+    zeta_ip[1]  = ip[1];
+    // third point
+    xi_ip[2]    = ip[0];
+    eta_ip[2]   = ip[1];
+    zeta_ip[2]  = ip[0];
+    // fourth point
+    xi_ip[3]    = ip[1];
+    eta_ip[3]   = ip[0];
+    zeta_ip[3]  = ip[0];
+    
+    // weights
+    wip[0] = wip[1] = wip[2] = wip[3] = 1.0 / 24.0;
 }
 
 void LinTet::BuildElemK()

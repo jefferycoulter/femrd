@@ -49,9 +49,9 @@ class LinTri : public Element
         int n_nodes = 3;
         int n_ip = 3;
         Node2D nodes[3];
-        float xi_ip[3]; // integration points
-        float eta_ip[3];
-        float wip[3];
+        double xi_ip[3]; // integration points
+        double eta_ip[3];
+        double wip[3];
         Eigen::Vector3d Nvec;
         Eigen::Matrix<double, 3, 2> GradNvec;
         Eigen::Matrix3d _k;

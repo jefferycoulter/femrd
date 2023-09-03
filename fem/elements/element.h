@@ -1,6 +1,8 @@
 #ifndef ELEMENT_INCL
 #define ELEMENT_INCL
 
+#include "logger/logger.h"
+
 #include <eigen/Eigen/Dense>
 
 #include <iostream>
@@ -79,7 +81,6 @@ class Element
         virtual inline Node& Nodes(const int &idx) = 0;
 };
 
-
 /**
  * @brief virtual data structure for nodes.  pure virtual methods so that the mesh can handle all spatial
  * dimensions without having to do any kind of extra work in the mesh class.
@@ -121,6 +122,7 @@ class Node1D : public Node
     public:
         inline double& Coords(const int &i) override
         {
+            Assert(i < 1, "index %d is out of bounds for 1D node", i);
             return coords;
         }
     public:
@@ -139,8 +141,9 @@ class Node2D : public Node
         void NodeType() override { std::cout << "Node2D\n"; }
     public:
         inline double& Coords(const int &i) override
-        {   // add check to make sure i is in range
-            return coords[i];
+        {   
+            Assert(i < 2, "index %d is out of bounds for 2D node", i);
+            return coords[i]; 
         }        
     public:
         Eigen::Vector2d coords;
@@ -156,7 +159,8 @@ class Node3D : public Node
         void NodeType() override { std::cout << "Node3D\n"; }
     public:
         inline double& Coords(const int &i) override
-        {   // add check to make sure i is in range
+        {   
+            Assert(i < 3, "index %d is out of bounds for 3D node", i);
             return coords[i];
         } 
 

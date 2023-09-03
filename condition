@@ -1,12 +1,3 @@
-# biochemistry
-number of species = 1
-# transient
-type = Linear
-C = 1
-# diffusion
-type = Linear
-D = 1e-1
-
 # fem
 number of dimensions = 3
 time step = 1e-1

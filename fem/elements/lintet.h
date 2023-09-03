@@ -49,10 +49,10 @@ class LinTet : public Element
         int n_nodes;
         int n_ip;
         Node3D nodes[4];
-        float xi_ip[4]; // integration points
-        float eta_ip[4]; // integration points
-        float zeta_ip[4]; // integration points
-        float wip[4];
+        double xi_ip[4]; // integration points
+        double eta_ip[4]; // integration points
+        double zeta_ip[4]; // integration points
+        double wip[4];
         Eigen::Vector4d Nvec;
         Eigen::Matrix<double, 4, 3> GradNvec;
         Eigen::Matrix<double, 4, 4> _k;

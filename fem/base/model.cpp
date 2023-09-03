@@ -13,7 +13,8 @@ void Model::ReadCondition()
     std::cout << "reading condition file" << "\n";
     std::ifstream in_file;
     in_file.open("condition");
-    for (std::string line; std::getline(in_file, line); )
+    std::string line;
+    while (std::getline(in_file, line))
     {
         if (line.find("number of dimensions") != std::string::npos)
         {   
@@ -33,10 +34,6 @@ void Model::ReadCondition()
         {   
             std::string mesh_file = line.substr(line.find(" = ") + 3); // 3 = length(" = ")
             mesh.ReadMesh(mesh_file);
-        }
-        if (line.find("number of species") != std::string::npos)
-        {   
-            n_species = std::stoi(line.substr(line.find(" = ") + 3)); // 3 = length(" = ")
         }
     }
 }

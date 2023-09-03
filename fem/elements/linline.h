@@ -49,8 +49,8 @@ class LinLine : public Element
         int n_nodes;        // number of nodes
         int n_ip;           // number of integration points
         Node1D nodes[2];    // element node list
-        float xi_ip[2];     // integration points
-        float wip[2];
+        double xi_ip[2];    // integration points
+        double wip[2];
         Eigen::Vector2d Nvec;
         Eigen::Vector2d GradNvec;
         double _j;          // jacobian is just a number in 1D
